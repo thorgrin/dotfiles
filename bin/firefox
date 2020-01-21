@@ -1,0 +1,12 @@
+#!/bin/bash
+
+OTHER_BROWSER='chromium'
+BROWSER_OPTIONS='' # Optional, for command line options passed to browser
+FIREFOX='/usr/bin/firefox'
+
+if echo "$1" | grep -P -e '^https?://(www.)?facebook.com|^https?://[^/]*fbcdn.net'; then
+	"$OTHER_BROWSER" $BROWSER_OPTIONS ${*} &
+    exit 0
+fi
+
+"$FIREFOX" "${*}"

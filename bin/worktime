@@ -1,0 +1,11 @@
+#!/bin/bash
+
+CURRENT=`date +%s`
+LOGIN=`last | head -n 5 | tail -n 1 | sed 's/ \+/ /g' | cut -f 4-7 -d " "`
+LOGIN=`date --date="$LOGIN" +%s`
+
+TIME=$(($CURRENT - $LOGIN))
+HOURS=$(($TIME/3600))
+MINUTES=$((($TIME-$HOURS*3600)/60))
+
+echo "${HOURS}h ${MINUTES}min"
