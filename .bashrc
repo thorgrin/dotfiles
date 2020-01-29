@@ -33,4 +33,7 @@ function parse_git_branch {
 
 PS1="\[\e[0;32m\]\u@\h:\[\e[m\]\[\e[1;34m\]\w\[\e[m\]\[\e[1;31m\]\$(parse_git_branch)\[\e[m\]\[\e[1;32m\]>\[\e[m\] "
 
+PATH="$PATH:/sbin:/usr/sbin:/usr/local/sbin"
+MANPATH="$MANPATH:/usr/local/share/man"
+
 test -s ~/.alias && . ~/.alias || true
