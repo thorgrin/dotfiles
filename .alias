@@ -1,0 +1,5 @@
+alias mpv='mpv --sub-auto=fuzzy'
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias please='sudo $(history -p \!\!)'
+alias hist='eval $(history | fzf +s --tac | sed -r '\''s/ *[0-9]*\*? *//'\'' | sed -r '\''s/\\/\\\\/g'\'')'
+alias prev='fzf --preview '\''cat {}'\'
