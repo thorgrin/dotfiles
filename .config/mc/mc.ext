@@ -505,7 +505,8 @@ regex/\.([rR][aA]?[mM])$
 	Open=(realplay %f >/dev/null 2>&1 &)
 
 include/video
-	Open=(mplayer %f >/dev/null 2>&1 &)
+	Open=(mpv --sub-auto=fuzzy %f >/dev/null 2>&1 &)
+	#Open=(mplayer %f >/dev/null 2>&1 &)
 	#Open=(gtv %f >/dev/null 2>&1 &)
 	#Open=(xanim %f >/dev/null 2>&1 &)
 	View=%view{ascii} which mediainfo > /dev/null 2>&1 && mediainfo %f || file %f
