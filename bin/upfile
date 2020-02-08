@@ -9,7 +9,7 @@ fi
 scp "$files" jezevec:/var/www/jezevec.eu/default/tmp/
 for f in "$files"; do
 	X=$(basename "$f")
-	url="http://jezevec.eu/tmp/"`echo "$X" | perl -MURI::Escape -pe 's|.*|uri_escape($&)|e'` 
+	url="https://jezevec.eu/tmp/"`echo "$X" | perl -MURI::Escape -pe 's|.*|uri_escape($&)|e'` 
 	echo $url
 	echo -n $url | xclip -sel clip 2>/dev/null
 done
