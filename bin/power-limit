@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+        echo "the script needs one argument: enable|on|disable|off|status"
+		exit 1
+fi
+
+action="$1"
+
+case "$1" in
+enable|on)
+	for i in {0..7}; do sudo bash -c 'echo 800000 >  /sys/devices/system/cpu/cpufreq/policy'$i'/scaling_max_freq'; done
+	for i in {2..7}; do sudo bash -c 'echo 0 > /sys/devices/system/cpu/cpu'$i'/online'; done
+	;;
+disable|off)
+	for i in {2..7}; do sudo bash -c 'echo 1 > /sys/devices/system/cpu/cpu'$i'/online'; done
+	for i in {0..7}; do sudo bash -c 'echo 4000000 >  /sys/devices/system/cpu/cpufreq/policy'$i'/scaling_max_freq'; done
+	;;
+status)
+	freq=`cat /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq`
+	if [ "$freq" -ne 4000000 ]; then
+		echo "limited to $freq"
+	else 
+		echo "unlimited"
+	fi
+	;;
+*) 
+	echo "error: unknown parameter"
+	;;
+esac
