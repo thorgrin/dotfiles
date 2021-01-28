@@ -713,7 +713,7 @@ regex/\.xz$
 	View=%view{ascii} xz -dc %f 2>/dev/null
 
 # pcap
-type/^pcap capture file
+type/^pcap(ng)? capture file
 	Open=(/usr/bin/wireshark %f >/dev/null &)
 
 ### Default ###
