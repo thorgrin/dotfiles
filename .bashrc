@@ -36,4 +36,21 @@ PS1="\[\e[0;32m\]\u@\h:\[\e[m\]\[\e[1;34m\]\w\[\e[m\]\[\e[1;31m\]\$(parse_git_br
 PATH="$PATH:/sbin:/usr/sbin:/usr/local/sbin"
 MANPATH="$MANPATH:/usr/local/share/man"
 
+export MOSH_TITLE_NOPREFIX=1
+
+set-konsole-tab-title-type ()
+{
+    local _title=$1
+    local _type=${2:-0}
+    [[ -z "${_title}" ]]               && return 1
+    [[ -z "${KONSOLE_DBUS_SERVICE}" ]] && return 1
+    [[ -z "${KONSOLE_DBUS_SESSION}" ]] && return 1
+    qdbus >/dev/null "${KONSOLE_DBUS_SERVICE}" "${KONSOLE_DBUS_SESSION}" setTabTitleFormat "${_type}" "${_title}"
+}
+set-konsole-tab-title ()
+{
+    set-konsole-tab-title-type "$1" && set-konsole-tab-title-type "$1" 1
+}
+
+
 test -s ~/.alias && . ~/.alias || true
