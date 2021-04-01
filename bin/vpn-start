@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Start VPN in a netns called 'vpn'
+# After the openvpn starts, use 'sudo ip netns exec vpn command' to execute command in the vpn namespace
+
 CONF_DIR=~/.openvpn
 
 if [ -z "$1" ]; then
@@ -13,3 +16,4 @@ VPN=`ls "$CONF_DIR/$1"* 2>/dev/null`
 NETNS_UP=`which netns-up`
 
 sudo openvpn --ifconfig-noexec --route-noexec --up "$NETNS_UP" --route-up "$NETNS_UP" --down "$NETNS_UP" --script-security 2 --config "$VPN"
+
