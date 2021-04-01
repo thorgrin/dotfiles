@@ -1,0 +1,15 @@
+#!/bin/bash
+
+CONF_DIR=~/.openvpn
+
+if [ -z "$1" ]; then
+	echo -e "Which VPN?\nProvide at least start of config file name from $CONF_DIR/\nOptions: "`cd "$CONF_DIR/"; ls *.ovpn`
+	exit 1
+fi
+
+VPN=`ls "$CONF_DIR/$1"* 2>/dev/null`
+[[ $? != 0 ]] && echo "Unknown file '$1'" && exit 1
+
+NETNS_UP=`which netns-up`
+
+sudo openvpn --ifconfig-noexec --route-noexec --up "$NETNS_UP" --route-up "$NETNS_UP" --down "$NETNS_UP" --script-security 2 --config "$VPN"
