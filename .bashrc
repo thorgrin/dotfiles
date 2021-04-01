@@ -52,5 +52,5 @@ set-konsole-tab-title ()
     set-konsole-tab-title-type "$1" && set-konsole-tab-title-type "$1" 1
 }
 
-
 test -s ~/.alias && . ~/.alias || true
+test -s ~/.alias_private && . ~/.alias_private || true
