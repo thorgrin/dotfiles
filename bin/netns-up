@@ -7,7 +7,14 @@ case $script_type in
                 ip netns add vpn
                 ip netns exec vpn ip link set dev lo up
                 mkdir -p /etc/netns/vpn
-                echo "nameserver 8.8.8.8" > /etc/netns/vpn/resolv.conf
+
+				# use nameserver from DHCP of the VPN, fallback to 8.8.8.8
+				nameservers=`printenv | awk '$1 ~ /foreign_option_[0-9]=dhcp-option/ && $2 == "DNS" {print "nameserver "$3}'`
+				test -z "$nameservers" && $nameservers="nameserver 8.8.8.8"
+				echo "$nameservers" > /etc/netns/vpn/resolv.conf
+#                echo "nameserver 8.8.8.8" > /etc/netns/vpn/resolv.conf
+				ip netns exec vpn mount --bind /dev/null /var/run/nscd/socket
+
                 ip link set dev "$1" up netns vpn mtu "$2"
                 ip netns exec vpn ip addr add dev "$1" \
                         "$4/${ifconfig_netmask:-30}" \
