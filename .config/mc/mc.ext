@@ -263,6 +263,67 @@ regex/\.(7z|7Z)$
 type/^ASCII\ mail\ text
 	Open=%cd %p/mailfs://
 
+### Plain compressed files ###
+
+# ace
+regex/\.(ace|ACE)$
+	Open=%cd %p/uace://
+	View=%view{ascii} unace l %f
+	Extract=unace x %f
+
+# arc
+regex/\.(arc|ARC)$
+	Open=%cd %p/uarc://
+	View=%view{ascii} arc l %f
+	Extract=arc x %f '*'
+	Extract (with flags)=I=%{Enter any Arc flags:}; if test -n "$I"; then arc x $I %f; fi
+
+# zip
+type/([Zz][Ii][Pp])\ archive
+	Open=%cd %p/uzip://
+	View=%view{ascii} unzip -v %f
+
+# zoo
+regex/\.([Zz][Oo][Oo])$
+	Open=%cd %p/uzoo://
+	View=%view{ascii} zoo l %f
+
+# gzip
+type/^gzip
+	Open=gzip -dc %f | %var{PAGER:more}
+	View=%view{ascii} gzip -dc %f 2>/dev/null
+
+regex/\.(gz|Z)$
+	View=%view{ascii} gzip -dc %f 2>/dev/null
+
+# bzip2
+type/^bzip2
+	Open=bzip2 -dc %f | %var{PAGER:more}
+	View=%view{ascii} bzip2 -dc %f 2>/dev/null
+
+regex/\.bz2?$
+	View=%view{ascii} bzip2 -dc %f 2>/dev/null
+
+# bzip
+type/^bzip
+	Open=bzip -dc %f | %var{PAGER:more}
+	View=%view{ascii} bzip -dc %f 2>/dev/null
+
+# compress
+type/^compress
+	Open=gzip -dc %f | %var{PAGER:more}
+	View=%view{ascii} gzip -dc %f 2>/dev/null
+
+# lzma
+regex/\.lzma$
+	Open=lzma -dc %f | %var{PAGER:more}
+	View=%view{ascii} lzma -dc %f 2>/dev/null
+
+# xz
+regex/\.xz$
+	Open=xz -dc %f | %var{PAGER:more}
+	View=%view{ascii} xz -dc %f 2>/dev/null
+
 
 ### Sources ###
 
@@ -555,7 +616,7 @@ type/^Microsoft\ Office\ Document
 	Open=(xdg-open %f >/dev/null 2>&1 &)
 	View=%view{ascii} wvText %f - || strings %f
 
-type/^Microsoft\ Word
+type/Microsoft\ Word
 	#Open=if which abiword ; then (abiword %f >/dev/null 2>&1 &); else (ooffice %f >/dev/null 2>&1 &); fi >/dev/null
 	Open=(xdg-open %f >/dev/null 2>&1 &)
 	View=%view{ascii} wvText %f - || strings %f
@@ -649,68 +710,6 @@ regex/\.(lyx|LYX)$
 # torrent
 regex/\.([tT][oO][rR][rR][eE][nN][tT])$
 	View=%view{ascii} which ctorrent >/dev/null 2>&1 && ctorrent -x %f 2>/dev/null || which transmission-show >/dev/null 2>&1 && transmission-show %f || file %f
-
-
-### Plain compressed files ###
-
-# ace
-regex/\.(ace|ACE)$
-	Open=%cd %p/uace://
-	View=%view{ascii} unace l %f
-	Extract=unace x %f
-
-# arc
-regex/\.(arc|ARC)$
-	Open=%cd %p/uarc://
-	View=%view{ascii} arc l %f
-	Extract=arc x %f '*'
-	Extract (with flags)=I=%{Enter any Arc flags:}; if test -n "$I"; then arc x $I %f; fi
-
-# zip
-type/^([Zz][Ii][Pp])\ archive
-	Open=%cd %p/uzip://
-	View=%view{ascii} unzip -v %f
-
-# zoo
-regex/\.([Zz][Oo][Oo])$
-	Open=%cd %p/uzoo://
-	View=%view{ascii} zoo l %f
-
-# gzip
-type/^gzip
-	Open=gzip -dc %f | %var{PAGER:more}
-	View=%view{ascii} gzip -dc %f 2>/dev/null
-
-regex/\.(gz|Z)$
-	View=%view{ascii} gzip -dc %f 2>/dev/null
-
-# bzip2
-type/^bzip2
-	Open=bzip2 -dc %f | %var{PAGER:more}
-	View=%view{ascii} bzip2 -dc %f 2>/dev/null
-
-regex/\.bz2?$
-	View=%view{ascii} bzip2 -dc %f 2>/dev/null
-
-# bzip
-type/^bzip
-	Open=bzip -dc %f | %var{PAGER:more}
-	View=%view{ascii} bzip -dc %f 2>/dev/null
-
-# compress
-type/^compress
-	Open=gzip -dc %f | %var{PAGER:more}
-	View=%view{ascii} gzip -dc %f 2>/dev/null
-
-# lzma
-regex/\.lzma$
-	Open=lzma -dc %f | %var{PAGER:more}
-	View=%view{ascii} lzma -dc %f 2>/dev/null
-
-# xz
-regex/\.xz$
-	Open=xz -dc %f | %var{PAGER:more}
-	View=%view{ascii} xz -dc %f 2>/dev/null
 
 # pcap
 type/^pcap(ng)? capture file
