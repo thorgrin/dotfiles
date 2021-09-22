@@ -1,25 +1,40 @@
 #!/bin/bash
 
 if [ $# -eq 0 ]; then
-        echo "the script needs one argument: enable|on|disable|off|status"
+        echo "The script needs at least one argument: enable [frequency] [cores]|on|disable|off|status"
+		echo "Example: 'enable 1200 4' sets limit to 1200MHz and leaves 4 cores running"
 		exit 1
 fi
 
 action="$1"
 
+# Frequency to set
+if [ -n "$2" ]; then
+	freq="${2}000"
+else
+	freq=800000
+fi
+
+if [ -n "$3" ] && [ "$3" -ge 1 ]; then
+	cores="$3"
+else
+	cores=2
+fi
+
 case "$1" in
 enable|on)
-	for i in {0..7}; do sudo bash -c 'echo 800000 >  /sys/devices/system/cpu/cpufreq/policy'$i'/scaling_max_freq'; done
-	for i in {2..7}; do sudo bash -c 'echo 0 > /sys/devices/system/cpu/cpu'$i'/online'; done
+	for i in {0..7}; do sudo bash -c 'echo '"$freq"' >  /sys/devices/system/cpu/cpufreq/policy'$i'/scaling_max_freq'; done
+	for i in $(seq ${cores} 7); do sudo bash -c 'echo 0 > /sys/devices/system/cpu/cpu'$i'/online'; done
 	;;
 disable|off)
-	for i in {2..7}; do sudo bash -c 'echo 1 > /sys/devices/system/cpu/cpu'$i'/online'; done
+	for i in {1..7}; do sudo bash -c 'echo 1 > /sys/devices/system/cpu/cpu'$i'/online'; done
 	for i in {0..7}; do sudo bash -c 'echo 4000000 >  /sys/devices/system/cpu/cpufreq/policy'$i'/scaling_max_freq'; done
 	;;
 status)
-	freq=`cat /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq`
+	freq=`cat /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq | awk '//{print $1/1000}'`
+	cores=`(cat /sys/devices/system/cpu/cpu*/online; echo 1) | grep '1' | wc -l`
 	if [ "$freq" -ne 4000000 ]; then
-		echo "limited to $freq"
+		echo "limited to ${freq}MHz and $cores cores"
 	else 
 		echo "unlimited"
 	fi
