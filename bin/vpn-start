@@ -10,7 +10,7 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
-VPN=`ls "$CONF_DIR/$1"* 2>/dev/null`
+VPN=`ls "$CONF_DIR/$1"*.ovpn 2>/dev/null`
 [[ $? != 0 ]] && echo "Unknown file '$1'" && exit 1
 
 NETNS_UP=`which netns-up`
