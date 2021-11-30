@@ -10,7 +10,7 @@ case $script_type in
 
 				# use nameserver from DHCP of the VPN, fallback to 8.8.8.8
 				nameservers=`printenv | awk '$1 ~ /foreign_option_[0-9]=dhcp-option/ && $2 == "DNS" {print "nameserver "$3}'`
-				test -z "$nameservers" && $nameservers="nameserver 8.8.8.8"
+				test -z "$nameservers" && nameservers="nameserver 8.8.8.8"
 				echo "$nameservers" > /etc/netns/vpn/resolv.conf
 #                echo "nameserver 8.8.8.8" > /etc/netns/vpn/resolv.conf
 				ip netns exec vpn mount --bind /dev/null /var/run/nscd/socket
