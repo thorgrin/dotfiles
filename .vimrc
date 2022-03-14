@@ -7,6 +7,8 @@ syntax on
 " Automatic filetype recognition
 filetype plugin on
 
+set background=dark
+
 " Set tabs to 4 spaces
 "set indentexpr=''
 set tabstop=4
