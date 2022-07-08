@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -eu
+
+bat_dir="/sys/class/power_supply/BAT0"
+
+[[ ! -d "$bat_dir" ]] && exit 1
+cd "$bat_dir"
+
+if [ "$#" -eq "0" ]; then
+	action="info"
+else
+	action="$1"
+fi
+
+function set-thresholds {
+	local start="${1:?}" stop="${2:?}" old_stop
+	read -r old_stop <"charge_stop_threshold"
+	if (( start > old_stop )); then
+		echo "$stop" | sudo tee "charge_stop_threshold"
+		echo "$start" | sudo tee "charge_start_threshold"
+	else
+		echo "$start" | sudo tee "charge_start_threshold"
+		echo "$stop" | sudo tee "charge_stop_threshold"
+	fi
+}
+
+function get-info {
+	local stop start full design now
+	read -r stop <"charge_stop_threshold"
+	read -r start <"charge_start_threshold"
+	read -r full <"energy_full"
+	read -r design <"energy_full_design"
+	read -r now <"energy_now"
+
+	echo "charging from $start% to $stop%"
+	echo "charge $(( 100 * now / full ))%, capacity $(( 100 * full / design ))%"
+}
+
+case "$action" in
+	normal) set-thresholds 30 70 ;;
+	full) set-thresholds 96 100 ;;
+	stat|info) get-info ;;
+	*) echo "use 'full', 'normal' or 'stat'" ;;
+esac
